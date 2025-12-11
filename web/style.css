@@ -347,8 +347,8 @@ body {
 
 /* Send Button: Sekarang jadi Pink */
 .send-btn {
-    width: 40px;
-    height: 40px;
+    width: 20px;
+    height: 20px;
     border: none;
     background-color: var(--sakura-pink);
     color: white;

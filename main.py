@@ -58,7 +58,7 @@ TOP_K = 50
 # --- Global Model Variables ---
 model = None
 tokenizer = None
-DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+DEVICE = "cpu"
 
 # --- Load Model ---
 def load_model():
