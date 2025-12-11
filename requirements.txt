@@ -1,0 +1,16 @@
+# Kōhai AI - Backend Dependencies
+
+# FastAPI & Server
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+python-multipart>=0.0.6
+pyngrok>=7.0.0
+
+# ML & Model
+torch>=2.0.0
+transformers>=4.36.0
+peft>=0.7.0
+accelerate>=0.25.0
+
+# Utilities
+pydantic>=2.0.0

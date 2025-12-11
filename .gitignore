@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+
+
+# Models (Large files)
+*.safetensors
+*.bin
+*.pt
+lora-id-4/
+# Keep config files but ignore weights if you want to save space
+# But for this project, maybe you want to keep lora-id-4 if it's small (<100MB)
+# If lora-id-4 is large, uncomment the line below:
+# lora-id-4/
+
+final_project.ipynb
+notebook.ipynb
+main_hf_api.py
+WEB_DOCUMENTATION.md
+DEPLOYMENT_GUIDE.md
+
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
