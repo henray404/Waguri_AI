@@ -4,7 +4,7 @@
 
 // --- Configuration ---
 const CONFIG = {
-    API_URL: 'http://localhost:8000/chat',  // FastAPI endpoint
+    API_URL: 'https://viki-maziest-shenita.ngrok-free.dev/chat',  // FastAPI endpoint
     MAX_MESSAGE_LENGTH: 2000,
     TYPING_DELAY: 50,  // ms between typing animation steps
 };
