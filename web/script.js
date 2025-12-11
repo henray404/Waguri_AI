@@ -4,26 +4,26 @@
 
 // --- Configuration ---
 const CONFIG = {
-    API_URL: 'https://viki-maziest-shenita.ngrok-free.dev/chat',  // FastAPI endpoint
+    API_URL: 'http://localhost:8000/chat',  // Ganti ke relative path kalau satu server, atau full URL ngrok
     MAX_MESSAGE_LENGTH: 2000,
-    TYPING_DELAY: 50,  // ms between typing animation steps
 };
 
 // --- DOM Elements ---
 const chatMessages = document.getElementById('chat-messages');
 const chatInput = document.getElementById('chat-input');
 const sendBtn = document.getElementById('send-btn');
+const langBtns = document.querySelectorAll('.lang-btn'); // NEW
 
-// --- Chat History (for context) ---
+// --- State ---
 let chatHistory = [];
+let currentLang = 'id'; // Default language
 
 // --- Initialize ---
 document.addEventListener('DOMContentLoaded', () => {
-    // Auto-resize textarea
     chatInput.addEventListener('input', autoResizeTextarea);
-
-    // Send message handlers
     sendBtn.addEventListener('click', handleSendMessage);
+    
+    // Enter key handler
     chatInput.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
@@ -31,63 +31,78 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Focus input on load
+    // Language Switch Handler (NEW)
+    langBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Remove active class from all
+            langBtns.forEach(b => b.classList.remove('active'));
+            // Add active to clicked
+            btn.classList.add('active');
+            // Update state
+            currentLang = btn.getAttribute('data-lang');
+            // Update placeholder text
+            updatePlaceholder();
+            // Optional: Clear chat or notify user
+            console.log(`Language switched to: ${currentLang}`);
+        });
+    });
+
     chatInput.focus();
 });
 
-// --- Auto-resize Textarea ---
+function updatePlaceholder() {
+    if (currentLang === 'id') {
+        chatInput.placeholder = 'Ketik pesan Anda...';
+    } else {
+        chatInput.placeholder = 'Type your message...';
+    }
+}
+
 function autoResizeTextarea() {
     chatInput.style.height = 'auto';
     chatInput.style.height = Math.min(chatInput.scrollHeight, 150) + 'px';
 }
 
-// --- Handle Send Message ---
 async function handleSendMessage() {
     const message = chatInput.value.trim();
 
-    if (!message || message.length === 0) return;
+    if (!message) return;
     if (message.length > CONFIG.MAX_MESSAGE_LENGTH) {
-        alert(`Message too long! Maximum ${CONFIG.MAX_MESSAGE_LENGTH} characters.`);
+        alert('Message too long!');
         return;
     }
 
-    // Disable input while processing
     setInputState(false);
-
-    // Add user message to chat
+    
+    // Add User Message
     addMessage(message, 'user');
     chatHistory.push({ role: 'user', content: message });
-
-    // Clear input
+    
     chatInput.value = '';
     autoResizeTextarea();
 
-    // Show typing indicator
     const typingIndicator = showTypingIndicator();
 
     try {
-        // Send to API
-        const response = await sendToAPI(message);
+        // Send to API with Language param
+        const response = await sendToAPI(message, currentLang); // Pass lang here
 
-        // Remove typing indicator
         typingIndicator.remove();
-
-        // Add assistant response
+        
+        // Add Assistant Response
         addMessage(response, 'assistant');
         chatHistory.push({ role: 'assistant', content: response });
 
     } catch (error) {
         console.error('Error:', error);
         typingIndicator.remove();
-        addMessage('Maaf, terjadi kesalahan. Silakan coba lagi. (Sorry, an error occurred. Please try again.)', 'assistant', true);
+        addMessage('Maaf, ada error koneksi.', 'assistant', true);
     }
 
-    // Re-enable input
     setInputState(true);
     chatInput.focus();
 }
 
-// --- Add Message to Chat ---
 function addMessage(content, role, isError = false) {
     const messageDiv = document.createElement('div');
     messageDiv.className = `message ${role}${isError ? ' error' : ''}`;
@@ -95,127 +110,62 @@ function addMessage(content, role, isError = false) {
     const avatar = document.createElement('div');
     avatar.className = 'message-avatar';
 
-    // Use image for avatar
     const img = document.createElement('img');
-    const basePath = role === 'user' ? 'img/user' : 'img/icon';
-    img.src = `${basePath}.jpg`; // Try JPG first
-    img.alt = role;
-
-    // Smart fallback: JPG -> PNG -> Emoji
-    img.onerror = function () {
-        if (this.src.endsWith('.jpg')) {
-            // If JPG fails, try PNG
-            this.src = `${basePath}.png`;
-        } else {
-            // If PNG also fails, fallback to emoji
-            this.style.display = 'none';
-            avatar.textContent = role === 'user' ? '👤' : '🍰';
-        }
+    const basePath = role === 'user' ? 'web/img/user' : 'web/img/icon'; // Sesuaikan path
+    img.src = `${basePath}.jpg`;
+    img.onerror = function() {
+        // Fallback logic
+        this.style.display = 'none';
+        avatar.textContent = role === 'user' ? '👤' : '🍰';
     };
-
     avatar.appendChild(img);
 
     const contentDiv = document.createElement('div');
     contentDiv.className = 'message-content';
+    
+    const p = document.createElement('p');
+    p.textContent = content;
+    contentDiv.appendChild(p);
 
-    const paragraph = document.createElement('p');
-    paragraph.textContent = content;
-
-    contentDiv.appendChild(paragraph);
     messageDiv.appendChild(avatar);
     messageDiv.appendChild(contentDiv);
-
     chatMessages.appendChild(messageDiv);
-
-    // Scroll to bottom
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
-// --- Show Typing Indicator ---
 function showTypingIndicator() {
+    // (Sama seperti kodemu sebelumnya)
     const messageDiv = document.createElement('div');
     messageDiv.className = 'message assistant';
-    messageDiv.id = 'typing-indicator';
-
-    const avatar = document.createElement('div');
-    avatar.className = 'message-avatar';
-
-    const img = document.createElement('img');
-    img.src = '/img/icon.jpg';
-    img.alt = 'assistant';
-    img.onerror = function () {
-        this.style.display = 'none';
-        avatar.textContent = '🍰';
-    };
-    avatar.appendChild(img);
-
-    const contentDiv = document.createElement('div');
-    contentDiv.className = 'message-content';
-
-    const indicator = document.createElement('div');
-    indicator.className = 'typing-indicator';
-    indicator.innerHTML = '<span></span><span></span><span></span>';
-
-    contentDiv.appendChild(indicator);
-    messageDiv.appendChild(avatar);
-    messageDiv.appendChild(contentDiv);
-
+    messageDiv.innerHTML = `
+        <div class="message-avatar">🍰</div>
+        <div class="message-content">
+            <div class="typing-indicator"><span></span><span></span><span></span></div>
+        </div>`;
     chatMessages.appendChild(messageDiv);
     chatMessages.scrollTop = chatMessages.scrollHeight;
-
     return messageDiv;
 }
 
-// --- Send to API ---
-async function sendToAPI(message) {
+async function sendToAPI(message, lang) {
     const response = await fetch(CONFIG.API_URL, {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
             message: message,
-            history: chatHistory.slice(-10)  // Send last 10 messages for context
+            history: chatHistory.slice(-6), // Limit history
+            lang: lang // NEW: Kirim bahasa ke backend
         })
     });
 
-    if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
+    if (!response.ok) throw new Error('API Error');
     const data = await response.json();
     return data.response;
 }
 
-// --- Toggle Input State ---
 function setInputState(enabled) {
     chatInput.disabled = !enabled;
     sendBtn.disabled = !enabled;
-
-    if (enabled) {
-        chatInput.placeholder = 'Ketik pesan Anda... (Type your message...)';
-    } else {
-        chatInput.placeholder = 'Menunggu respons... (Waiting for response...)';
-    }
+    if (enabled) updatePlaceholder();
+    else chatInput.placeholder = 'Waguri sedang berpikir...';
 }
-
-// --- Clear Chat ---
-function clearChat() {
-    chatMessages.innerHTML = `
-        <div class="message assistant">
-            <div class="message-avatar">
-                <img src="img/icon.jpg" alt="assistant" onerror="this.style.display='none';this.parentNode.textContent='🍰'">
-            </div>
-            <div class="message-content">
-                <p>Halo! Saya Waguri AI, asisten bilingual Anda. Silakan bertanya dalam Bahasa Indonesia atau English! 🌸</p>
-            </div>
-        </div>
-    `;
-    chatHistory = [];
-}
-
-// --- Export functions for potential external use ---
-window.KohaiChat = {
-    clearChat,
-    chatHistory: () => chatHistory
-};

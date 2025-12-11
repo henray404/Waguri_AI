@@ -8,13 +8,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Nunito:wght@400;600;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <!-- Navbar -->
     <nav class="navbar">
         <div class="nav-brand">
             <div class="brand-icon">
@@ -28,35 +27,34 @@
         </div>
     </nav>
 
-    <!-- Main Container -->
     <main class="main-container">
-        <!-- Chat Container -->
         <div class="chat-container">
-            <!-- Chat Header -->
             <div class="chat-header">
                 <h1>Welcome to Waguri AI</h1>
                 <p>Your bilingual assistant for Indonesian & English</p>
+                
+                <div class="language-switch">
+                    <button class="lang-btn active" data-lang="id">🇮🇩 Indonesia</button>
+                    <button class="lang-btn" data-lang="en">🇬🇧 English</button>
+                </div>
             </div>
 
-            <!-- Chat Messages Area -->
             <div class="chat-messages" id="chat-messages">
-                <!-- Welcome Message -->
                 <div class="message assistant">
                     <div class="message-avatar">
                         <img src="img/icon.jpg" alt="assistant"
                             onerror="this.style.display='none';this.parentNode.textContent='🍰'">
                     </div>
                     <div class="message-content">
-                        <p>Halo! Aku Waguri AI, asisten bilingual Anda. what can i help you for today? 🌸</p>
+                        <p>Halo! Aku Waguri AI. Pilih bahasamu di atas, dan mari mengobrol! 🌸</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Chat Input Area -->
             <div class="chat-input-container">
                 <div class="chat-input-wrapper">
                     <textarea id="chat-input" class="chat-input"
-                        placeholder="Ketik pesan Anda... (Type your message...)" rows="1" maxlength="2000"></textarea>
+                        placeholder="Ketik pesan Anda..." rows="1" maxlength="2000"></textarea>
                     <button id="send-btn" class="send-btn" title="Kirim pesan">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="2">
@@ -69,7 +67,6 @@
         </div>
     </main>
 
-    <!-- Footer -->
     <footer class="footer">
         <div class="footer-content">
             <p>Our Machine Learning and Data Mining Final Project</p>
@@ -79,5 +76,4 @@
 
     <script src="script.js"></script>
 </body>
-
 </html>

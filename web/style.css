@@ -422,3 +422,55 @@ body {
     border-color: #FFCDD2;
     color: #C62828;
 }
+
+/* ... CSS sebelumnya ... */
+
+/* --- Language Switcher (NEW) --- */
+.language-switch {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    background-color: var(--cream-bg);
+    padding: 0.25rem;
+    border-radius: var(--radius-full);
+    border: 1px solid rgba(232, 160, 191, 0.3);
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.lang-btn {
+    border: none;
+    background: transparent;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-full);
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--charcoal-muted);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.lang-btn:hover {
+    color: var(--sakura-pink);
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+.lang-btn.active {
+    background-color: var(--sakura-pink);
+    color: white;
+    box-shadow: 0 2px 6px rgba(232, 160, 191, 0.4);
+    transform: scale(1.05);
+}
+
+/* Update Chat Header biar muat */
+.chat-header {
+    padding-bottom: 1.5rem; /* Kasih ruang buat tombol */
+}
+
+/* ... Sisanya sama ... */
