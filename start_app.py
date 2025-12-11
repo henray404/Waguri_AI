@@ -26,9 +26,9 @@ def update_frontend_url(new_url):
         if new_content != content:
             with open(SCRIPT_JS_PATH, "w", encoding="utf-8") as f:
                 f.write(new_content)
-            print(f"✅ Frontend updated: API_URL set to {new_url}/chat")
+            print(f"Frontend updated: API_URL set to {new_url}/chat")
         else:
-            print("⚠️  Warning: Could not find API_URL in script.js to update.")
+            print("Warning: Could not find API_URL in script.js to update.")
             
     except Exception as e:
         print(f"❌ Error updating frontend: {e}")
@@ -39,12 +39,11 @@ def run_uvicorn():
     subprocess.run(cmd)
 
 def main():
-    print("\n" + "="*60)
-    print("  🚀 Waguri AI - Auto Launcher (Server + Ngrok)")
-    print("="*60 + "\n")
+    print(" Waguri AI - Auto Launcher (Server + Ngrok)")
+
 
     # 1. Start Uvicorn in a separate thread
-    print("⏳ Starting FastAPI Server...")
+    print(" Starting FastAPI Server...")
     server_thread = threading.Thread(target=run_uvicorn, daemon=True)
     server_thread.start()
     
@@ -52,22 +51,22 @@ def main():
     time.sleep(3)
 
     # 2. Start Ngrok
-    print("⏳ Starting Ngrok Tunnel...")
+    print("Starting Ngrok Tunnel...")
     try:
         # Get Ngrok Auth Token from env or ask user if missing
         # You can set it via: ngrok config add-authtoken <token>
         
         # Open a HTTP tunnel on the default port 8000
         public_url = ngrok.connect(PORT).public_url
-        print(f"\n🎉 Ngrok Tunnel Active!")
-        print(f"🌍 Public URL: {public_url}")
+        print(f"\n Ngrok Tunnel Active!")
+        print(f" Public URL: {public_url}")
         print("-" * 60)
         
         # 3. Update Frontend
         update_frontend_url(public_url)
         
         print("-" * 60)
-        print("📝 INSTRUCTIONS:")
+        print(" INSTRUCTIONS:")
         print("1. Copy the Public URL above.")
         print("2. If you are testing locally, open: http://localhost:8000")
         print("3. If you are testing from GitHub Pages/Public Internet:")
@@ -80,11 +79,11 @@ def main():
         server_thread.join()
 
     except KeyboardInterrupt:
-        print("\n🛑 Shutting down...")
+        print("\nShutting down...")
         ngrok.kill()
         sys.exit(0)
     except Exception as e:
-        print(f"\n❌ Error: {e}")
+        print(f"\nError: {e}")
         ngrok.kill()
         sys.exit(1)
 
