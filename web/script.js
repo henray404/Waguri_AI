@@ -97,7 +97,7 @@ function addMessage(content, role, isError = false) {
 
     // Use image for avatar
     const img = document.createElement('img');
-    const basePath = role === 'user' ? '/web/img/user' : '/web/img/icon';
+    const basePath = role === 'user' ? 'img/user' : 'img/icon';
     img.src = `${basePath}.jpg`; // Try JPG first
     img.alt = role;
 
@@ -141,7 +141,7 @@ function showTypingIndicator() {
     avatar.className = 'message-avatar';
 
     const img = document.createElement('img');
-    img.src = '/web/img/icon.jpg';
+    img.src = '/img/icon.jpg';
     img.alt = 'assistant';
     img.onerror = function () {
         this.style.display = 'none';
@@ -204,7 +204,7 @@ function clearChat() {
     chatMessages.innerHTML = `
         <div class="message assistant">
             <div class="message-avatar">
-                <img src="/web/bot.jpg" alt="assistant" onerror="this.style.display='none';this.parentNode.textContent='🍰'">
+                <img src="img/icon.jpg" alt="assistant" onerror="this.style.display='none';this.parentNode.textContent='🍰'">
             </div>
             <div class="message-content">
                 <p>Halo! Saya Waguri AI, asisten bilingual Anda. Silakan bertanya dalam Bahasa Indonesia atau English! 🌸</p>
