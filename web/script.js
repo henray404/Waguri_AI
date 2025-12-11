@@ -4,7 +4,7 @@
 
 // --- Configuration ---
 const CONFIG = {
-    API_URL: 'http://localhost:8000/chat',  // Ganti ke relative path kalau satu server, atau full URL ngrok
+    API_URL: 'https://viki-maziest-shenita.ngrok-free.dev/chat',  // Ganti ke relative path kalau satu server, atau full URL ngrok
     MAX_MESSAGE_LENGTH: 2000,
 };
 
